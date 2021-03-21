@@ -1,4 +1,4 @@
-# Shell script to create Django project
+# Shell script to create Django project from scratch
 
 #Linux
 
@@ -19,8 +19,8 @@ This script does the following:
 
 	- Ask for the project name, the Python version and the Django version.
 	- Create the folder with the project name inside the folder (indicated in line 25 PROJECTS_FOLDER = ...).
-	- Creates and activates the virtual environment (virtualenv) as the name '.venv'.
-	- Updates the 'pip' and 'setuptools'.
+	- Create and activate the virtual environment (virtualenv) as the name '.venv'.
+	- Update the 'pip' and 'setuptools'.
 	- Install Django.
 	- Install the necessary libraries for the project (indicated in the list on line 28).
 	- Create the Django project.
