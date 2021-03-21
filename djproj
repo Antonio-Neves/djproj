@@ -1,0 +1,264 @@
+#!/usr/bin/bash
+
+# Colors and string vars
+cian=$(tput setaf 6)
+green=$(tput setaf 2)
+reset=$(tput sgr0)
+line="----------------------------------------- \n"
+
+# Read project name, Python and Django version
+echo -e "${cian}${line} Enter project settings \n${line}${reset}"
+echo "Project name:"
+read PROJECT_NAME
+
+echo "Python version:"
+read PYTHON_VERSION
+
+echo "Django version (empty for last stable version):"
+read DJANGO_VERSION
+
+# Project Vars
+PROJECT_NAME=$PROJECT_NAME
+PYTHON_VERSION=$PYTHON_VERSION
+DJANGO_VERSION=$DJANGO_VERSION
+
+PROJECTS_FOLDER=~/devdj
+
+# Extra required installations var
+EXTRA_INSTALLATIONS=('psycopg2-binary' 'django-decouple')
+
+# Create folder whit project name
+cd $PROJECTS_FOLDER
+mkdir $PROJECT_NAME
+
+echo -e "${green}${line} Created '$PROJECT_NAME' folder \n${line}${reset}"
+
+# Create and activate virtualenv inside project folder
+sleep 2
+echo -e "${cian}${line} Create and activate virtualenv \n${line}${reset}"
+cd $PROJECT_NAME
+python$PYTHON_VERSION -m virtualenv .venv
+source .venv/bin/activate
+
+echo -e "${green}${line} Created and activated virtualenv \n${line}${reset}"
+
+# Upgrade pip and setuptools
+sleep 2
+echo -e "${cian}${line} Upgrade pip and setuptools \n${line}${reset}"
+pip install --no-cache-dir --upgrade pip setuptools
+
+echo -e "${green}${line} Upgraded pip and setuptools \n${line}${reset}"
+
+# Install Django
+sleep 2
+echo -e "${cian}${line} Install Django \n${line}${reset}"
+if [$DJANGO_VERSION -eq ""]
+then
+	pip install --no-cache-dir django
+	
+	echo -e "${green}${line} Installed Django last version \n${line}${reset}"
+
+else
+	pip install --no-cache-dir django==$DJANGO_VERSION
+
+	echo -e "${green}${line} Installed Django version $DJANGO_VERSION \n${line}${reset}"
+fi
+
+# Extra installations
+for i in "${EXTRA_INSTALLATIONS[@]}"
+	do
+		sleep 2
+		echo -e "${cian}${line} Install $i \n${line}${reset}"
+
+		pip install $i
+
+		echo -e "${green}${line} Installed $i \n${line}${reset}"
+
+	done
+
+# Create Django project
+sleep 2
+echo -e "${cian}${line} Create Django project \n${line}${reset}"
+
+django-admin startproject $PROJECT_NAME .
+
+echo -e "${green}${line} Created Django project \n${line}${reset}"
+
+# Create Base app, directories and files
+sleep 2
+echo -e "${cian}${line} Create Base app, directories and files \n${line}${reset}"
+
+django-admin startapp base
+
+mkdir base/templates
+mkdir base/templates/base
+
+mkdir base/static
+mkdir base/static/base
+mkdir base/static/base/css
+mkdir base/static/base/js
+mkdir base/static/base/images
+
+echo -e "${green}${line} Created Base app, directories and files \n${line}${reset}"
+
+# Create Principal app, directories and files
+sleep 2
+echo -e "${cian}${line} Create Principal app, directories and files \n${line}${reset}"
+
+django-admin startapp principal
+
+mkdir principal/templates
+mkdir principal/templates/principal
+
+cat <<EOF > principal/urls.py
+from django.urls import path
+
+
+urlpatterns = [
+
+]
+EOF
+
+echo -e "${green}${line} Created Principal app, directories and files \n${line}${reset}"
+
+# Create Requirements file
+sleep 2
+echo -e "${cian}${line} Create requirements text file \n${line}${reset}"
+
+pip freeze > requirements.txt
+
+echo -e "${green}${line} Created requirements text file \n${line}${reset}"
+
+# Create .env file for hide sensitive data with django-decouple
+sleep 2
+echo -e "${cian}${line} Create .env file for hide sensitive data \n${line}${reset}"
+
+cat <<EOF > .env
+SECRET_KEY=
+DEBUG=True
+ALLOWED_HOSTS=
+SUPER_USER=
+EMAIL=
+NAME_DB=
+USER_DB=
+PASSWORD_DB=
+HOST_DB=
+PORT_DB=
+STATIC_ROOT=/static_root
+MEDIA_ROOT=/media_root
+EMAIL_HOST=
+EMAIL_HOST_USER=
+EMAIL_PORT=
+EMAIL_HOST_PASSWORD=
+DEFAULT_FROM_EMAIL=
+EOF
+
+echo -e "${green}${line} Created .env file for hide sensitive data \n${line}${reset}"
+
+# Create .env.example file for github repository
+sleep 2
+echo -e "${cian}${line} Create .env.example file for github repository \n${line}${reset}"
+
+cat <<EOF > .env.example
+SECRET_KEY=django_secret_key
+DEBUG=False
+ALLOWED_HOSTS=domain.com
+SUPER_USER=superuser
+EMAIL=domain@domain.com
+NAME_DB=data_base_name
+USER_DB=data_base_user
+PASSWORD_DB=data_base_password
+HOST_DB=data_base_host
+PORT_DB=data_base_port
+STATIC_ROOT=/static_root
+MEDIA_ROOT=/media_root
+EMAIL_HOST=email_host
+EMAIL_HOST_USER=domain@domain.com
+EMAIL_PORT=email_port
+EMAIL_HOST_PASSWORD=email_password
+DEFAULT_FROM_EMAIL=domain@domain.com
+EOF
+
+echo -e "${green}${line} Created .env.example file for github repository \n${line}${reset}"
+
+# Create .gitignore file for github repository
+sleep 2
+echo -e "${cian}${line} Create .gitignore file for github repository \n${line}${reset}"
+
+cat <<EOF > .gitignore
+# Sensitive files
+.env
+
+# Django #
+*.log
+*.pot
+*.pyc
+__pycache__
+
+# Data Base
+db.sqlite3
+
+# PyCharm
+.idea
+
+# Virtualenv
+.venv
+
+# Folders
+media
+htmlcov/*
+
+# Files
+
+# Testes
+
+EOF
+
+echo -e "${green}${line} Created .gitignore file for github repository \n${line}${reset}"
+
+# Create License MIT file
+sleep 2
+echo -e "${cian}${line} Create License MIT file \n${line}${reset}"
+
+cat <<EOF > LICENSE
+MIT License
+
+Copyright (c) 2021 António Manuel Neves
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+EOF
+
+echo -e "${green}${line} Created License MIT file \n${line}${reset}"
+
+# Create Readme file
+sleep 2
+echo -e "${cian}${line} Create Readme file \n${line}${reset}"
+
+touch README.md
+
+echo -e "${green}${line} Created Readme file \n${line}${reset}"
+
+# Initializes Git
+sleep 2
+echo -e "${cian}${line} Initializes Git \n${line}${reset}"
+
+git init
+
+echo -e "${green}${line} initialized git \n${line}${reset}"
+
