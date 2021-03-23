@@ -25,7 +25,7 @@ DJANGO_VERSION=$DJANGO_VERSION
 PROJECTS_FOLDER=~/devdj
 
 # Extra required installations var
-EXTRA_INSTALLATIONS=('psycopg2-binary' 'django-decouple')
+EXTRA_INSTALLATIONS=('psycopg2-binary' 'python-decouple')
 
 # Create folder whit project name
 cd $PROJECTS_FOLDER
@@ -129,7 +129,7 @@ pip freeze > requirements.txt
 
 echo -e "${green}${line} Created requirements text file \n${line}${reset}"
 
-# Create .env file for hide sensitive data with django-decouple
+# Create .env file for hide sensitive data with python-decouple
 sleep 2
 echo -e "${cian}${line} Create .env file for hide sensitive data \n${line}${reset}"
 

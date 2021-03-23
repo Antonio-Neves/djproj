@@ -50,7 +50,7 @@ This script does the following:
 	- Initialize empty GIT repository.
 
 
-Instructions for Django Decouple: https://pypi.org/project/django-decouple/
+Instructions for Python Decouple: https://pypi.org/project/python-decouple/
 
 The creation of this script was inspired by Regis Santos https://gist.github.com/rg3915 and her script https://gist.github.com/rg3915
 
